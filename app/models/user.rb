@@ -11,15 +11,19 @@ class User < ApplicationRecord
   def new_links_simple
     new_links = self.unseen_links
     if !!new_links
-      self.seen_it_all(new_links)
-      self.format_for_json
+      self.seen_it_all([new_links[0]])
+      p self.format_for_json(new_links)
     else
       false
     end
   end
 
 
-  private
+  protected
+
+  # def unseen_links(dis_id)
+  #   Link.includes(:piles).where.not('piles.user_id = :dis_id and links.digger_id = :dis_id', {dis_id: dis_id}).references(:piles).limit(5)
+  # end
 
   def unseen_links
     Link.where.not(digger_id: self.id, id: self.piles.collect{|pile| pile.link_id}).limit(5)
@@ -27,19 +31,25 @@ class User < ApplicationRecord
 
   #consider moving to link model
   def format_for_json(link_list)
-    link_list.collect do |link| 
-      id: link.id,
-      title: link.title,
-      url: link.url,
-      digger: link.digger
+    hash_links = link_list.collect do |link| 
+      hash_link = {
+        id: link.id,
+        title: link.title,
+        url: link.url,
+        digger: link.digger.name
+      }
+      hash_link
     end
+    hash_links
   end
 
   def seen_it_all(link_list)
-    link_list.each{|link| self.piles.create(link)}
+    link_list.each{|link| self.piles.create(link_id: link.id)}
   end
 
+  private
+
   def generate_access_key
-    self.key = SecureRandom.hex
+    self.key = SecureRandom.hex(3)
   end
 end
