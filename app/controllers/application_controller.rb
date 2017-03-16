@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::API
-  before_action :auth_with_key, :cors_preflight_check
+  before_action :cors_preflight_check
   after_filter :cors_set_access_control_headers
 
   def auth_with_key

@@ -1,4 +1,5 @@
 class LinksController < ApplicationController
+  before_action :auth_with_key
   
   def create
     if add_to_the_pile(link_deetz.to_h['links'], @user)
