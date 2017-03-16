@@ -1,8 +1,7 @@
 class LinksController < ApplicationController
   
   def create
-    hash_params = JSON.parse(params[:links])
-    if add_to_the_pile(hash_params, @user)
+    if add_to_the_pile(link_deetz.to_h['links'], @user)
       head :created
     else
       head :service_unavailable
@@ -19,6 +18,9 @@ class LinksController < ApplicationController
   end
   
   private
+  def link_deetz
+    params.require(:bookmarks).permit({links:[:title,:url]})
+  end
 
   def add_to_the_pile(links,user)
     save_count = 0

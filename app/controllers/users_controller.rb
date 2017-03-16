@@ -4,7 +4,7 @@ class UsersController < ApplicationController
   def create
     @user = User.new(user_deetz)
     if @user.save
-      render json: {status: 'Success!', data: {key: @user.key}}, status: :ok
+      render json: {status: 'Success!', data: {key: @user.key}}, status: :created
     else
       render json: {msg: @user.errors.full_messages}, status: :bad_request
     end
@@ -13,13 +13,6 @@ class UsersController < ApplicationController
   private
 
   def user_deetz
-    if params[:email].length < 30 && params[:name].length < 8
-      {
-        email: params[:email],
-        name: params[:name]
-      }
-    else
-      nil
-    end
+    params.require('user').permit('name','email')
   end
 end
