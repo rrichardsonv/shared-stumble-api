@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  skip_before_action :auth_with_key
+  #skip_before_action :auth_with_key
 
   def create
     @user = User.new(user_deetz)
