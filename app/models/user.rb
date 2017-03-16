@@ -11,7 +11,7 @@ class User < ApplicationRecord
   def new_links_simple
     new_links = self.unseen_links
     if !!new_links
-      self.seen_it_all([new_links[0]])
+      self.seen_it_all(new_links)
       p self.format_for_json(new_links)
     else
       false
