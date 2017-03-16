@@ -21,11 +21,10 @@ module SharedStumbleApi
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
-    cors_headers = {
-        'Access-Control-Allow-Origin' => '*',
-        'Access-Control-Request-Method' => %w{GET POST OPTIONS}.join(",")
-    }
-    cors_headers.each |k,v| do
+    {
+    'Access-Control-Allow-Origin' => '*', 
+    'Access-Control-Request-Method' => %w{GET POST OPTIONS}.join(",") 
+    }.each do |k,v|
         config.action_dispatch.set_header(k,v)
     end
     # Only loads a smaller set of middleware suitable for API only apps.
