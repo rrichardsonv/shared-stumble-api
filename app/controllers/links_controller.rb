@@ -11,8 +11,17 @@ class LinksController < ApplicationController
 
   def index
     link_data = @user.new_links_simple
-    if !!link_data
+    if link_data.any?
       render json: {status: 'SUCCESS', message: 'Loaded up links', data: link_data}, status: :ok
+    else
+      head :service_unavailable
+    end
+  end
+
+  def show
+    link_data = @user.new_link
+    if link_data.any?
+      render json: {status: 'SUCCESS', message: 'Loaded up link', data: link_data}, status: :ok
     else
       head :service_unavailable
     end

@@ -8,11 +8,22 @@ class User < ApplicationRecord
   has_many :links, foreign_key: :digger_id
   has_many :piled_links, through: :piles, source: :link
 
-  def new_links_simple
-    new_links = self.unseen_links
+  def new_link
+    new_links = self.unseen_links(1)
     if !!new_links
       self.seen_it_all(new_links)
-      p self.format_for_json(new_links)
+      self.format_for_json(new_links)
+    else
+      false
+    end
+  end
+
+
+  def new_links_simple
+    new_links = self.unseen_links(5)
+    if !!new_links
+      self.seen_it_all(new_links)
+      self.format_for_json(new_links)
     else
       false
     end
@@ -25,8 +36,8 @@ class User < ApplicationRecord
   #   Link.includes(:piles).where.not('piles.user_id = :dis_id and links.digger_id = :dis_id', {dis_id: dis_id}).references(:piles).limit(5)
   # end
 
-  def unseen_links
-    Link.where.not(digger_id: self.id, id: self.piles.collect{|pile| pile.link_id}).limit(5)
+  def unseen_links(to_n)
+    Link.where.not(digger_id: self.id, id: self.piles.collect{|pile| pile.link_id}).limit(to_n)
   end
 
   #consider moving to link model
